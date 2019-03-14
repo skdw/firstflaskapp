@@ -10,7 +10,7 @@ def request_info():
 
 @app.route('/') # @ - dekorator (funkcja zostanie uzyta, jeśli ktoś zapyta o ściezkę '/')
 def hello():
-    return 'Hello!'
+    return 'Hello, world!'
 
 
 if __name__ == '__main__':
