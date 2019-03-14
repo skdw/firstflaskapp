@@ -2,7 +2,12 @@
 
 from flask import Flask
 from flask import request
+import json
 app = Flask(__name__)
+
+@app.route('/show_data', methods=['GET','POST'])
+def print_json():
+    return request.get_json(force=True)
 
 @app.route('/method', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def print_method():
