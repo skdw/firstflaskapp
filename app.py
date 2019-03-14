@@ -4,7 +4,7 @@ from flask import Flask
 from flask import request
 app = Flask(__name__)
 
-@app.route('/method')
+@app.route('/method', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def print_method():
     return request.method
 
