@@ -4,6 +4,10 @@ from flask import Flask
 from flask import request
 app = Flask(__name__)
 
+@app.route('/method')
+def print_method():
+    return request.method
+
 @app.route('/request')
 def request_info():
     return f'request method: {request.method} url: {request.url} headers: {request.headers}'
