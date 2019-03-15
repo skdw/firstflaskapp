@@ -3,7 +3,12 @@
 from flask import Flask
 from flask import request
 import json
+from flask import jsonify
 app = Flask(__name__)
+
+@app.route('/counter')
+def countviews():
+    return 0
 
 @app.route('/pretty_print_name', methods=['POST'])
 def print_pretty_name():
@@ -14,7 +19,7 @@ def print_pretty_name():
 def print_json():
     if(request.is_json):
         content = request.get_json()
-        return str(content)
+        return jsonify(content)
     else:
         return 'Not JSON'
 
