@@ -5,6 +5,11 @@ from flask import request
 import json
 app = Flask(__name__)
 
+@app.route('/pretty_print_name', methods=['POST'])
+def print_pretty_name():
+    content = request.get_json()
+    return 'Na imię mu {0}, a nazwisko jego {1}'.format(str(content['name']), str(content['surename']))
+
 @app.route('/show_data', methods=['POST'])
 def print_json():
     if(request.is_json):
