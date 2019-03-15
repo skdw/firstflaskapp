@@ -5,9 +5,13 @@ from flask import request
 import json
 app = Flask(__name__)
 
-@app.route('/show_data', methods=['GET','POST'])
+@app.route('/show_data', methods=['POST'])
 def print_json():
-    return request.get_json(force=True)
+    if(request.is_json):
+        content = request.get_json()
+        return str(content)
+    else:
+        return 'Not JSON'
 
 @app.route('/method', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def print_method():
