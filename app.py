@@ -1,5 +1,4 @@
 # app.py
-# coding=utf8
 
 from flask import Flask
 from flask import request
