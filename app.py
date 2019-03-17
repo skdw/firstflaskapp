@@ -1,14 +1,20 @@
 # app.py
+# coding=utf8
 
 from flask import Flask
 from flask import request
 import json
 from flask import jsonify
+
 app = Flask(__name__)
+
+counter = 1
 
 @app.route('/counter')
 def countviews():
-    return 0
+    global counter
+    counter += 1
+    return str(counter)
 
 @app.route('/pretty_print_name', methods=['POST'])
 def print_pretty_name():
@@ -29,7 +35,7 @@ def print_method():
 
 @app.route('/request')
 def request_info():
-    return f'request method: {request.method} url: {request.url} headers: {request.headers}'
+    return f"request method: {request.method} url: {request.url} headers: {request.headers}"
 
 @app.route('/') # @ - dekorator (funkcja zostanie uzyta, jeśli ktoś zapyta o ściezkę '/')
 def hello():
