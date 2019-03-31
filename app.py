@@ -1,8 +1,9 @@
 # app.py
 
 from flask import Flask, session, request, make_response, redirect, url_for
-from requests import Request, Session
-from requests.auth import HTTPBasicAuth
+#from requests import Request, Session
+#from requests.auth import HTTPBasicAuth
+from functools import wraps
 import json
 from flask import jsonify
 import datetime
@@ -13,28 +14,29 @@ app.permanent_session_lifetime = datetime.timedelta(days=365)
 counter = 1
 
 @app.route('/hello')
-def hello():
-    return 'Hello!'
+def hello2():
+    return 'Hello, world!'
 
-def auth_required(f):
-    @wraps(f)
-    def decorated(*args, *kwargs):
-        auth = request.authorization
-        if auth and auth.username == 'username' and auth.password == 'password':
-            return f(*args, **kwargs)
-        return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
+#def auth_required(f):
+#    @wraps(f)
+#    def decorated(*args, **kwargs):
+#        auth = request.authorization
+#        if auth and auth.username == 'username' and auth.password == 'password':
+#            return f(*args, **kwargs)
+#        return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
+#    return decorated
 
-@app.route('/login', methods=['GET', 'POST'])
-@auth_required
-def login():
-    return redirect(url_for('/hello'))
+#@app.route('/login', methods=['GET', 'POST'])
+#@auth_required
+#def login():
+#    return redirect(url_for('/hello'))
 
+@app.route('/login', methods=['POST'])
 def logincopy():
-    if request.authorization and request.authorization.username == 'username' and request.authorization.password == 'password':
-        return redirect(url_for('/hello'))
+    if request.authorization and request.authorization.username == 'TRAIN' and request.authorization.password == 'TuN3L':
+        return redirect(url_for('hello2'))
 
     return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
-    #requests.get('https://api.github.com/user', auth=HTTPBasicAuth('user', 'pass'))
 
 @app.route('/counter')
 def countviews():
