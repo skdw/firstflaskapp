@@ -1,13 +1,24 @@
 # app.py
 
-from flask import Flask
-from flask import request
+from flask import Flask, session, request
+from requests import Request, Session
+from requests.auth import HTTPBasicAuth
 import json
 from flask import jsonify
+import datetime
 
 app = Flask(__name__)
+app.permanent_session_lifetime = datetime.timedelta(days=365)
 
 counter = 1
+
+@app.route('/hello')
+def hello():
+    return 'Hello!'
+
+@app.route('/login', methods=['POST'])
+def login():
+    requests.get('https://api.github.com/user', auth=HTTPBasicAuth('user', 'pass'))
 
 @app.route('/counter')
 def countviews():
