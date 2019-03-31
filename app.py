@@ -17,43 +17,26 @@ counter = 1
 
 @app.route('/trains')
 def hello3():
-    if getsession() == 'Not logged in':
+    if getsession() == 999:
         return redirect(url_for('hello'))
     return 'Hello, world!'
 
-
 @app.route('/hello')
 def hello2():
-    if 'user' in session:
-        return 'Hello, world!'
-    else:
-        redirect(url_for('hello'))
-
-#def auth_required(f):
-#    @wraps(f)
-#    def decorated(*args, **kwargs):
-#        auth = request.authorization
-#        if auth and auth.username == 'username' and auth.password == 'password':
-#            return f(*args, **kwargs)
-#        return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
-#    return decorated
-
-#@app.route('/login', methods=['GET', 'POST'])
-#@auth_required
-#def login():
-#    return redirect(url_for('/hello'))
+    if getsession() == 999:
+        return redirect(url_for('hello'))
+    return 'Hello, world!'
 
 @app.route('/login', methods=['POST'])
 def login():
     if request.authorization and request.authorization.username == 'TRAIN' and request.authorization.password == 'TuN3L':
         session['user'] = 'TRAIN'
         return redirect(url_for('hello2'))
-
     return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    if getsession() == 'Not logged in':
+    if getsession() == 999:
         return redirect(url_for('login'))
     return redirect(url_for('dropsession'))
 
@@ -61,7 +44,7 @@ def logout():
 def getsession():
     if 'user' in session:
         return session['user']
-    return 'Not logged in!'
+    return 999
 
 @app.route('/dropsession')
 def dropsession():
