@@ -27,7 +27,7 @@ def hello2():
         return redirect(url_for('hello'))
     return 'Hello, world!'
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.authorization and request.authorization.username == 'TRAIN' and request.authorization.password == 'TuN3L':
         session['user'] = 'TRAIN'
