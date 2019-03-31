@@ -18,7 +18,7 @@ counter = 1
 @app.route('/trains')
 def hello3():
     if getsession() == 'Not logged in':
-        return redirect(url_for('/'))
+        return redirect(url_for('hello'))
     return 'Hello, world!'
 
 
@@ -27,7 +27,7 @@ def hello2():
     if 'user' in session:
         return 'Hello, world!'
     else:
-        redirect(url_for('/'))
+        redirect(url_for('hello'))
 
 #def auth_required(f):
 #    @wraps(f)
@@ -56,7 +56,6 @@ def logout():
     if getsession() == 'Not logged in':
         return redirect(url_for('login'))
     return redirect(url_for('dropsession'))
-    
 
 @app.route('/getsession')
 def getsession():
@@ -67,7 +66,7 @@ def getsession():
 @app.route('/dropsession')
 def dropsession():
     session.pop('user', None)
-    return 'Dropped!'
+    return redirect(url_for('hello'))
 
 @app.route('/counter')
 def countviews():
