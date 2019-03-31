@@ -7,14 +7,25 @@ from functools import wraps
 import json
 from flask import jsonify
 import datetime
+import os
 
 app = Flask(__name__)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
+app.secret_key = os.urandom(24)
 
 counter = 1
 
+@app.route('/trains')
+def hello3():
+    if getsession() == 'Not logged in':
+        return redirect(url_for('/'))
+    return 'Hello, world!'
+
+
 @app.route('/hello')
 def hello2():
+    if getsession() == 'Not logged in':
+        return redirect(url_for('/'))
     return 'Hello, world!'
 
 #def auth_required(f):
@@ -32,11 +43,30 @@ def hello2():
 #    return redirect(url_for('/hello'))
 
 @app.route('/login', methods=['POST'])
-def logincopy():
+def login():
     if request.authorization and request.authorization.username == 'TRAIN' and request.authorization.password == 'TuN3L':
+        session['user'] = 'TRAIN'
         return redirect(url_for('hello2'))
 
     return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    if getsession() == 'Not logged in':
+        return redirect(url_for('login'))
+    return redirect(url_for('dropsession'))
+    
+
+@app.route('/getsession')
+def getsession():
+    if 'user' in session:
+        return session['user']
+    return 'Not logged in!'
+
+@app.route('/dropsession')
+def dropsession():
+    session.pop('user', None)
+    return 'Dropped!'
 
 @app.route('/counter')
 def countviews():
