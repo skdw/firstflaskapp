@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, session, request
+from flask import Flask, session, request, make_response, redirect, url_for
 from requests import Request, Session
 from requests.auth import HTTPBasicAuth
 import json
@@ -16,9 +16,25 @@ counter = 1
 def hello():
     return 'Hello!'
 
-@app.route('/login', methods=['POST'])
+def auth_required(f):
+    @wraps(f)
+    def decorated(*args, *kwargs):
+        auth = request.authorization
+        if auth and auth.username == 'username' and auth.password == 'password':
+            return f(*args, **kwargs)
+        return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
+
+@app.route('/login', methods=['GET', 'POST'])
+@auth_required
 def login():
-    requests.get('https://api.github.com/user', auth=HTTPBasicAuth('user', 'pass'))
+    return redirect(url_for('/hello'))
+
+def logincopy():
+    if request.authorization and request.authorization.username == 'username' and request.authorization.password == 'password':
+        return redirect(url_for('/hello'))
+
+    return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
+    #requests.get('https://api.github.com/user', auth=HTTPBasicAuth('user', 'pass'))
 
 @app.route('/counter')
 def countviews():
