@@ -24,9 +24,10 @@ def hello3():
 
 @app.route('/hello')
 def hello2():
-    if getsession() == 'Not logged in':
-        return redirect(url_for('/'))
-    return 'Hello, world!'
+    if 'user' in session:
+        return 'Hello, world!'
+    else:
+        redirect(url_for('/'))
 
 #def auth_required(f):
 #    @wraps(f)
