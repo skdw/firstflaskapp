@@ -36,7 +36,7 @@ def print_method():
 def request_info():
     return f"request method: {request.method} url: {request.url} headers: {request.headers}"
 
-@app.route('/') # @ - dekorator (funkcja zostanie uzyta, jeśli ktoś zapyta o ściezkę '/')
+@app.route('/', method='GET') # @ - dekorator (funkcja zostanie uzyta, jeśli ktoś zapyta o ściezkę '/')
 def hello():
     return 'Hello, World!'
 
