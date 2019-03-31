@@ -34,7 +34,7 @@ def login():
         return redirect(url_for('hello2'))
     return make_response('Could not verify!', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if getsession() == 999:
         return redirect(url_for('login'))
