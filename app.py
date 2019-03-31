@@ -15,13 +15,13 @@ app.secret_key = os.urandom(24)
 
 counter = 1
 
-@app.route('/trains')
+@app.route('/trains', methods=['GET', 'POST'])
 def hello3():
     if getsession() == 999:
         return redirect(url_for('hello'))
     return 'Hello, world!'
 
-@app.route('/hello')
+@app.route('/hello', methods=['GET', 'POST'])
 def hello2():
     if getsession() == 999:
         return redirect(url_for('hello'))
@@ -40,13 +40,13 @@ def logout():
         return redirect(url_for('login'))
     return redirect(url_for('dropsession'))
 
-@app.route('/getsession')
+@app.route('/getsession', methods=['GET', 'POST'])
 def getsession():
     if 'user' in session:
         return session['user']
     return 999
 
-@app.route('/dropsession')
+@app.route('/dropsession', methods=['GET', 'POST'])
 def dropsession():
     session.pop('user', None)
     return redirect(url_for('hello'))
