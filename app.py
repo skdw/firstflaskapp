@@ -1,11 +1,7 @@
 # app.py
 
-from flask import Flask, session, request, make_response, redirect, url_for
-#from requests import Request, Session
-#from requests.auth import HTTPBasicAuth
-from functools import wraps
+from flask import Flask, jsonify, session, request, make_response, redirect, url_for, render_template
 import json
-from flask import jsonify
 import datetime
 import os
 
@@ -15,17 +11,18 @@ app.secret_key = os.urandom(24)
 
 counter = 1
 
-@app.route('/trains', methods=['GET', 'POST'])
+@app.route('/trains', methods=['GET'])
 def hello3():
     if 'user' in session:
         return redirect(url_for('hello'))
-    return 'Hello, world!'
+    return redirect(url_for('login'), code=301)
 
-@app.route('/hello', methods=['GET', 'POST'])
+@app.route('/hello', methods=['GET'])
 def hello2():
     if 'user' in session:
-        return redirect(url_for('hello'))
-    return 'Hello, world!'
+        render = render_template('hello.html', user = user)
+        return render
+    return redirect(url_for('login'), code=301)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -38,7 +35,7 @@ def login():
 def logout():
     if 'user' in session:
         session.pop('user', None)
-        return redirect(url_for('hello'), code=301)
+        return redirect(url_for('hello'))
     return redirect(url_for('login'), code=301)
 
 @app.route('/counter')
