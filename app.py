@@ -20,7 +20,7 @@ def hello3():
 @app.route('/hello', methods=['GET'])
 def hello2():
     if 'user' in session:
-        render = render_template('hello.html', user = user)
+        render = render_template('hello.html', user = session["user"])
         return render
     return redirect(url_for('login'), code=301)
 
