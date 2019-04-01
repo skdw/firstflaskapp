@@ -37,7 +37,7 @@ def login():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if getsession() == 999:
-        return redirect(url_for('login'))
+        return redirect(url_for('login'), code=200)
     return redirect(url_for('dropsession'))
 
 @app.route('/getsession', methods=['GET', 'POST'])
@@ -49,7 +49,7 @@ def getsession():
 @app.route('/dropsession', methods=['GET', 'POST'])
 def dropsession():
     session.pop('user', None)
-    return redirect(url_for('hello'))
+    return redirect(url_for('hello'), code=200)
 
 @app.route('/counter')
 def countviews():
