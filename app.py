@@ -17,13 +17,13 @@ counter = 1
 
 @app.route('/trains', methods=['GET', 'POST'])
 def hello3():
-    if getsession() == 999:
+    if 'user' in session:
         return redirect(url_for('hello'))
     return 'Hello, world!'
 
 @app.route('/hello', methods=['GET', 'POST'])
 def hello2():
-    if getsession() == 999:
+    if 'user' in session:
         return redirect(url_for('hello'))
     return 'Hello, world!'
 
@@ -36,20 +36,10 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    if getsession() == 999:
-        return redirect(url_for('login'), code=200)
-    return redirect(url_for('dropsession'))
-
-@app.route('/getsession', methods=['GET', 'POST'])
-def getsession():
     if 'user' in session:
-        return session['user']
-    return 999
-
-@app.route('/dropsession', methods=['GET', 'POST'])
-def dropsession():
-    session.pop('user', None)
-    return redirect(url_for('hello'), code=200)
+        session.pop('user', None)
+        return redirect(url_for('hello'), code=301)
+    return redirect(url_for('dropsession'))
 
 @app.route('/counter')
 def countviews():
