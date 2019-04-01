@@ -11,16 +11,17 @@ app.secret_key = os.urandom(24)
 
 counter = 1
 
-@app.route('/trains', methods=['GET'])
+@app.route('/trains', methods=['GET', 'POST'])
 def hello3():
     if 'user' in session:
-        return redirect(url_for('hello'))
-    return redirect(url_for('login'), code=301)
+        print('type(request.query_string):', request.query_string)
+        #return redirect(url_for('hello'))
+    else return redirect(url_for('login'), code=301)
 
 @app.route('/hello', methods=['GET'])
 def hello2():
     if 'user' in session:
-        render = render_template('hello.html', user = session["user"])
+        render = render_template('hello.html', user = session['user'])
         return render
     return redirect(url_for('login'), code=301)
 
