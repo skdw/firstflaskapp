@@ -39,7 +39,7 @@ def logout():
     if 'user' in session:
         session.pop('user', None)
         return redirect(url_for('hello'), code=301)
-    return redirect(url_for('dropsession'))
+    return redirect(url_for('login'), code=301)
 
 @app.route('/counter')
 def countviews():
