@@ -16,7 +16,8 @@ def hello3():
     if 'user' in session:
         print('type(request.query_string):', request.query_string)
         #return redirect(url_for('hello'))
-    else return redirect(url_for('login'), code=301)
+    else:
+        return redirect(url_for('login'), code=301)
 
 @app.route('/hello', methods=['GET'])
 def hello2():
