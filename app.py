@@ -14,7 +14,7 @@ counter = 1
 
 DATABASE = 'chinook.db'
 
-@app.route('/tracks')
+@app.route('/tracks', methods=['GET'])
 def tracks_list():
     db = get_db()
     cursor = db.cursor()
