@@ -18,15 +18,10 @@ DATABASE = 'chinook.db'
 def tracks_list():
     db = get_db()
     cursor = db.cursor()
-    data = cursor.execute('SELECT name FROM tracks ORDER by name').fetchall()
-    d = list()
-    for dat in data:
-        d.append(dat[0])
-    d[100] = d[98]
-    d = jsonify(d)
+    data = cursor.execute('SELECT name FROM tracks ORDER by name COLLATE NOCASE').fetchall()
+    d = [item[0] for item in data]
     cursor.close()
-    return d
-
+    return jsonify(d)
 
 def get_db():
     db = getattr(g, '_database', None)
