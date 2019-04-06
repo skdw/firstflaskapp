@@ -23,7 +23,17 @@ def tracks_list():
         querystr += ' WHERE artists.Name ='
         querystr += " '" + str(artist) + "'"
     querystr += ' ORDER by tracks.Name COLLATE NOCASE'
+    
+    limit = request.args.get('per_page')
+    if(limit):
+        querystr += ' LIMIT ' + str(limit)
 
+    page = request.args.get('page')
+    if(page and limit):
+        offset = (int(page) - 1) * int(limit)
+        querystr += ' OFFSET ' + str(offset)
+
+    print(querystr)
     db = get_db()
     cursor = db.cursor()
     data = cursor.execute(querystr).fetchall()
