@@ -14,25 +14,19 @@ counter = 1
 
 DATABASE = 'chinook.db'
 
-@app.route('/tracks', methods=['GET'])
+@app.route('/tracks')
 def tracks_list():
-    querystr = 'SELECT tracks.Name FROM tracks'
-    artist = request.args.get('artist')
-    if(artist):
-        querystr += ' JOIN albums on albums.AlbumId = tracks.AlbumId JOIN artists on artists.ArtistId = albums.ArtistID'
-        querystr += ' WHERE artists.Name ='
-        querystr += " '" + str(artist) + "'"
-    querystr += ' ORDER by tracks.Name'
-    #print(querystr)
-
     db = get_db()
     cursor = db.cursor()
-    data = cursor.execute('SELECT tracks.Name FROM tracks').fetchall()
-    d = [item[0] for item in data]
-    #if(len(d) > 100):
-    #    d[100] = d[98]
+    data = cursor.execute('SELECT name FROM tracks ORDER by name').fetchall()
+    d = list()
+    for dat in data:
+        d.append(dat[0])
+    d[100] = d[98]
+    d = jsonify(d)
     cursor.close()
-    return jsonify(d)
+    return d
+
 
 def get_db():
     db = getattr(g, '_database', None)
