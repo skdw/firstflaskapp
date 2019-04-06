@@ -27,7 +27,7 @@ def tracks_list():
 
     db = get_db()
     cursor = db.cursor()
-    data = cursor.execute(querystr).fetchall()
+    data = cursor.execute('SELECT tracks.Name FROM tracks').fetchall()
     d = [item[0] for item in data]
     #if(len(d) > 100):
     #    d[100] = d[98]
