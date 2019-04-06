@@ -14,7 +14,7 @@ counter = 1
 
 DATABASE = 'chinook.db'
 
-@app.route('/tracks')
+@app.route('/tracks', methods=['GET'])
 def tracks_list():
     querystr = 'SELECT tracks.Name FROM tracks'
     artist = request.args.get('artist')
@@ -29,8 +29,8 @@ def tracks_list():
     cursor = db.cursor()
     data = cursor.execute(querystr).fetchall()
     d = [item[0] for item in data]
-    if(len(d) > 100):
-        d[100] = d[98]
+    #if(len(d) > 100):
+    #    d[100] = d[98]
     cursor.close()
     return jsonify(d)
 
