@@ -18,7 +18,7 @@ DATABASE = 'chinook.db'
 def tracks_list():
     db = get_db()
     cursor = db.cursor()
-    data = cursor.execute('SELECT name FROM tracks').fetchall()
+    data = cursor.execute('SELECT name FROM tracks ORDER by name').fetchall()
     cursor.close()
     #return render_template('tracks.html', tracks=data)
     return jsonify(data)
