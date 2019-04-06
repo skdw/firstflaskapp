@@ -1,6 +1,7 @@
 # app.py
 
-from flask import Flask, jsonify, session, request, make_response, redirect, url_for, render_template
+from flask import Flask, jsonify, session, request, make_response, redirect, url_for, render_template, g
+import sqlite3
 import json
 import datetime
 import os
@@ -11,10 +12,36 @@ app.secret_key = os.urandom(24)
 
 counter = 1
 
+DATABASE = 'chinook.db'
+
+@app.route('/tracks')
+def tracks_list():
+    db = get_db()
+    cursor = db.cursor()
+    data = cursor.execute('SELECT name FROM tracks').fetchall()
+    cursor.close()
+    #return render_template('tracks.html', tracks=data)
+    return jsonify(data)
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
 @app.route('/trains', methods=['GET', 'POST'])
 def hello3():
     if 'user' in session:
-        print('type(request.query_string):', request.query_string)
+        myformat = 'XML'
+        if request.args.get('format') == 'json':
+            myformat = 'JSON'
+        print('format: ' + myformat)
         #return redirect(url_for('hello'))
     else:
         return redirect(url_for('login'), code=301)
