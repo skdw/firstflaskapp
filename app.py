@@ -16,9 +16,17 @@ DATABASE = 'chinook.db'
 
 @app.route('/tracks', methods=['GET'])
 def tracks_list():
+    querystr = 'SELECT tracks.Name FROM tracks'
+    artist = request.args.get('artist')
+    if(artist):
+        querystr += ' JOIN albums on albums.AlbumId = tracks.AlbumId JOIN artists on artists.ArtistId = albums.ArtistID'
+        querystr += ' WHERE artists.Name ='
+        querystr += " '" + str(artist) + "'"
+    querystr += ' ORDER by tracks.Name COLLATE NOCASE'
+
     db = get_db()
     cursor = db.cursor()
-    data = cursor.execute('SELECT name FROM tracks ORDER by name COLLATE NOCASE').fetchall()
+    data = cursor.execute(querystr).fetchall()
     d = [item[0] for item in data]
     cursor.close()
     return jsonify(d)
