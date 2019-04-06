@@ -20,9 +20,8 @@ def tracks_list():
     cursor = db.cursor()
     data = cursor.execute('SELECT name FROM tracks ORDER by name').fetchall()
     data[100] = data[98]
-    data = jsonify(data)
+    data = jsonify(list(data))
     cursor.close()
-    #return render_template('tracks.html', tracks=data)
     return data
 
 def get_db():
