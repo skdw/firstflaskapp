@@ -18,7 +18,7 @@ DATABASE = 'chinook.db'
 def tracks_list():
     db = get_db()
     cursor = db.cursor()
-    data = cursor.execute('SELECT name FROM tracks ORDER by name').fetchall()
+    data = cursor.execute('SELECT tracks.Name FROM tracks ORDER by tracks.Name').fetchall()
     d = list()
     for dat in data:
         d.append(dat[0])
