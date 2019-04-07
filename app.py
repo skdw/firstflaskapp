@@ -14,32 +14,73 @@ counter = 1
 
 DATABASE = 'chinook.db'
 
-@app.route('/tracks', methods=['GET'])
+@app.route('/tracks', methods=['GET', 'POST'])
 def tracks_list():
-    querystr = 'SELECT tracks.Name FROM tracks'
-    artist = request.args.get('artist')
-    if(artist):
-        querystr += ' JOIN albums on albums.AlbumId = tracks.AlbumId JOIN artists on artists.ArtistId = albums.ArtistID'
-        querystr += ' WHERE artists.Name ='
-        querystr += " '" + str(artist) + "'"
-    querystr += ' ORDER by tracks.Name COLLATE NOCASE'
-    
-    limit = request.args.get('per_page')
-    if(limit):
-        querystr += ' LIMIT ' + str(limit)
+    # POST request
+    if(request.method == 'POST' and request.is_json):
+        content = request.get_json()
 
-    page = request.args.get('page')
-    if(page and limit):
-        offset = (int(page) - 1) * int(limit)
-        querystr += ' OFFSET ' + str(offset)
+        keys = ['album_id', 'media_type_id', 'genre_id', 'name', 'composer', 'milliseconds', 'bytes', 'price']
+        tablekeys = ['AlbumId', 'MediaTypeId', 'GenreId', 'name', 'Composer', 'Milliseconds', 'Bytes', 'UnitPrice']
 
-    print(querystr)
-    db = get_db()
-    cursor = db.cursor()
-    data = cursor.execute(querystr).fetchall()
-    d = [item[0] for item in data]
-    cursor.close()
-    return jsonify(d)
+        for key in keys:
+            if not key in content:
+                return redirect(('/'), code=400)
+
+        keys_str = ""
+        values_str = ""
+        for i in range(len(keys)):
+            if(keys_str != ""):
+                keys_str += ", "
+                values_str += ", "
+            keys_str += tablekeys[i]
+            if(type(content[keys[i]]) == str):
+                values_str += "'" + str(content[keys[i]]) + "'"
+            else: 
+                values_str += str(content[keys[i]])
+
+        query1 = "INSERT INTO tracks (" + keys_str + ") VALUES (" + values_str + ")"
+        query2 = "SELECT * FROM tracks WHERE TrackId = last_insert_rowid()"
+        query3 = "SELECT name FROM PRAGMA_TABLE_INFO('tracks')"
+
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(query1).fetchall()
+        data = cursor.execute(query2).fetchall()
+        columns = cursor.execute(query3).fetchall()
+        cursor.close()
+        val = [dat for dat in data[0]]
+        keys = [dat[0] for dat in columns]
+        d = dict(zip(keys,val))
+        return jsonify(d)
+
+    # GET request
+    if(request.method == 'GET'):
+        querystr = 'SELECT tracks.Name FROM tracks'
+        artist = request.args.get('artist')
+        if(artist):
+            querystr += ' JOIN albums on albums.AlbumId = tracks.AlbumId JOIN artists on artists.ArtistId = albums.ArtistID'
+            querystr += ' WHERE artists.Name ='
+            querystr += " '" + str(artist) + "'"
+        querystr += ' ORDER by tracks.Name COLLATE NOCASE'
+        
+        limit = request.args.get('per_page')
+        if(limit):
+            querystr += ' LIMIT ' + str(limit)
+
+        page = request.args.get('page')
+        if(page and limit):
+            offset = (int(page) - 1) * int(limit)
+            querystr += ' OFFSET ' + str(offset)
+
+        #print(querystr)
+        db = get_db()
+        cursor = db.cursor()
+        data = cursor.execute(querystr).fetchall()
+        d = [item[0] for item in data]
+        cursor.close()
+        return jsonify(d)
+    return redirect(('/'), code=400)
 
 def get_db():
     db = getattr(g, '_database', None)
