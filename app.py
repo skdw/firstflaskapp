@@ -14,6 +14,24 @@ counter = 1
 
 DATABASE = 'chinook.db'
 
+@app.route('/genres')
+def count_genres():
+    querystr = "SELECT genres.Name, COUNT(*) as TracksCount FROM genres "
+    querystr += "JOIN tracks on genres.GenreId = tracks.GenreId "
+    querystr += "GROUP by genres.GenreId "
+    querystr += "ORDER by genres.Name"
+
+    db = get_db()
+    cursor = db.cursor()
+    data = cursor.execute(querystr).fetchall()
+
+    genres = [item[0] for item in data]
+    count = [item[1] for item in data]
+    d = dict(zip(genres,count))
+
+    cursor.close()
+    return jsonify(d)
+
 @app.route('/tracks', methods=['GET', 'POST'])
 def tracks_list():
     # POST request
