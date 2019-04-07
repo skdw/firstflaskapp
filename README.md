@@ -1,5 +1,5 @@
 # First Flask App
-My first app written in Flask for Daftcode's "Python level Up" course
+My first app written in Flask for Daftcode's "Python Level UP" course
 
 https://daftacademy.pl/courses/LKvtY2
 
